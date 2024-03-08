@@ -10,19 +10,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Response;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 
 public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<ModalClass> list;
-    Context context;
+   private ArrayList<ModalClass> list;
+    private Context context;
+    private  ItemCLickListener clickListener;
 
-    public MyAdapter(ArrayList<ModalClass> list, Context context) {
+    public MyAdapter(ArrayList<ModalClass> list, Context context, ItemCLickListener clickListener) {
         this.list = list;
         this.context = context;
+        this.clickListener = clickListener;
     }
 
     @NonNull
@@ -44,6 +49,13 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ((ViewHolder)holder).priceview.setText(""+price);
         Picasso.get().load(url).into(((ViewHolder) holder).imgview);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickListener.onItemClick(currentItem);
+            }
+        });
+
     }
 
     @Override
@@ -62,6 +74,9 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             imgview = itemView.findViewById(R.id.item_img);
             priceview = itemView.findViewById(R.id.price_txt);
         }
+    }
+    interface ItemCLickListener {
+        void onItemClick(ModalClass modalClass);
     }
 
 }
